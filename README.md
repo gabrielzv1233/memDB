@@ -1,39 +1,34 @@
 # memDB
 
-A self-hosted, agent-accessible **structured dataset engine and MCP gateway**, designed to link flexible SQLite datasets with knowledge stored in a separate Basic Memory instance.
+A self-hosted, agent-accessible **structured dataset engine and MCP gateway**, linking flexible SQLite datasets with knowledge stored in a separate Basic Memory instance.
 
-> **Status:** planning / architecture. No runtime implementation has been committed yet.
+> **Status:** planning / architecture only. No runtime implementation is committed.
 
 ## Start here
 
 - [Planning index](planning/README.md)
 - [Architecture](planning/architecture.md)
 - [Data model](planning/data-model.md)
-- [MCP tool contract](planning/mcp-contract.md)
+- [MCP tools](planning/mcp-contract.md)
 - [Pocket ID and authorization](planning/security-pocketid.md)
-- [Implementation roadmap](planning/roadmap.md)
-- [Agent handoff](AGENTS.md)
+- [Proxmox operations](planning/operations.md)
+- [Roadmap](planning/roadmap.md)
+- [Agent instructions](AGENTS.md)
+- [Editable diagrams](planning/diagrams/)
 
-## Repository boundaries
+## Separation of concerns
 
-| Location | Purpose |
+| Path | Purpose |
 | --- | --- |
-| `planning/` | Requirements, technical sheets, diagrams, examples, decisions and acceptance tests |
-| `src/memdb/` | Future Python gateway and SQLite engine implementation |
+| `planning/` | Architecture, technical sheets, editable diagrams, decisions, examples |
+| `src/memdb/` | Future Python gateway and SQLite dataset engine |
 | `tests/` | Future automated tests |
-| `deploy/` | Future VM/container manifests, migrations and operational scripts |
+| `deploy/` | Future Proxmox VM/container manifests and operations |
 
-**Basic Memory is not vendored or forked here.** memDB will interact with it through a versioned adapter using supported MCP/API methods.
+Basic Memory is **not** included or forked. memDB will link to its separately deployed instance through an adapter.
 
-Nothing in `planning/` should be mistaken for a deployed or implemented feature. Technical specifications are proposals until verified by tests and approved decisions.
+## Main idea
 
-## Design principles
+An AI creates logical namespaces and datasets inside one SQLite database, chooses versioned schemas and metadata, stores validated records, and links datasets or records to one or more notes in Basic Memory. Everything has discoverable names, descriptions, tags, relationships and IDs.
 
-1. One SQLite file can host many logical namespaces and datasets.
-2. Agents can define datasets, fields, metadata, tags, and relationships without adding tools or writing arbitrary SQL.
-3. Notes in Basic Memory and datasets/records in memDB share linkable identities but retain separate ownership.
-4. All dataset writes are validated, auditable, transactional, versioned, and permission-checked.
-5. One remotely accessible MCP endpoint sits behind authenticated HTTPS; internal services are not directly published.
-6. The service works without running a generative LLM. Client models invoke tools; the server indexes, validates and persists data.
-
-See [planning/README.md](planning/README.md) for the complete design map.
+The server does not run an LLM; the existing MCP client model decides when to call tools. The gateway enforces authentication, permissions, safe queries and transactional changes.

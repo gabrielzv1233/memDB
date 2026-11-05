@@ -1,0 +1,55 @@
+# Implementation roadmap
+
+Each phase requires docs, automated tests and a runnable acceptance demonstration.
+
+## Phase 0: Integration spike
+
+- Verify the live Basic Memory version's supported MCP/API calls for search, read and external note identity.
+- Verify remote MCP transport, ChatGPT chat-mode connection, Pocket ID OAuth compatibility, token audience and PKCE requirements.
+- Choose Python version, FastMCP/SDK version, migration mechanism and packaging.
+- Record observed endpoints/versions in an ADR. **No unsupported assumption is a valid contract.**
+
+**Acceptance:** authenticated client calls a protected hello/read-only discovery endpoint; Basic Memory reference resolves by supported interface, with errors handled.
+
+## Phase 1: SQLite core
+
+- Implement migrations for entities, namespaces, datasets, schemas, records, tags, links, revisions, idempotency, audit.
+- Enforce JSON Schema validation and schema version policy.
+- Implement optimistic revisions, soft delete, duplicate retry protection.
+- Test restart persistence, concurrent writers, rollback and invalid migrations.
+
+**Acceptance:** an agent creates a new namespace/dataset and stores/queries/tagged records without writing SQL or server code.
+
+## Phase 2: Memory relationships and search
+
+- External Basic Memory reference adapter, stable identity mapping and reference refresh.
+- Bidirectional link traversal, missing note resilience, permission-aware discovery, FTS5.
+- Add bounded context retrieval and source provenance.
+
+**Acceptance:** one Basic Memory instruction note links to two datasets and individual records; note renames do not break links when upstream identity is stable.
+
+## Phase 3: MCP and ACL hardening
+
+- Publish final tools with typed schemas, pagination, scopes, ACL and structured errors.
+- Rate limits, quotas, audit redaction, prompt-injection boundaries, schema change gates.
+- Verify negative tests and real remote MCP client.
+
+**Acceptance:** unauthorized search/link/mutation requests cannot reveal or change data.
+
+## Phase 4: Proxmox release
+
+- VM deployment manifests, internal Basic Memory connection, protected HTTPS endpoint.
+- Backup/restore, health checks, metrics, logging, release procedure and upgrade tests.
+- Threat review and operational runbook.
+
+**Acceptance:** fresh VM deployment from docs works, restore drill succeeds and secrets stay out of the repo.
+
+## Later, optional
+
+- More expressive typed dataset joins and uniqueness constraints
+- Semantic embeddings and reranking
+- Web UI for registry/links
+- Bulk import/export, dry-run automation, scheduled maintenance
+- Multi-user sharing, delegated access and synchronization
+
+Do not implement optional features before the core contracts are tested.
