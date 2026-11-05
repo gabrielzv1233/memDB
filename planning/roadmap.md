@@ -6,6 +6,8 @@ Each phase requires docs, automated tests and a runnable acceptance demonstratio
 
 - Verify the live Basic Memory version's supported MCP/API calls for search, read and external note identity.
 - Verify remote MCP transport, ChatGPT chat-mode connection, Pocket ID OAuth compatibility, token audience and PKCE requirements.
+- Verify actual ChatGPT account plan's access to custom MCP **read and write** tools; do not promise full writes on personal Plus/Pro.
+- Validate Basic Memory stable IDs, rename behavior, note metadata, search and read/write capabilities against deployed version.
 - Choose Python version, FastMCP/SDK version, migration mechanism and packaging.
 - Record observed endpoints/versions in an ADR. **No unsupported assumption is a valid contract.**
 
@@ -24,9 +26,10 @@ Each phase requires docs, automated tests and a runnable acceptance demonstratio
 
 - External Basic Memory reference adapter, stable identity mapping and reference refresh.
 - Bidirectional link traversal, missing note resilience, permission-aware discovery, FTS5.
-- Add bounded context retrieval and source provenance.
+- Add bounded `context_lookup` retrieval, source provenance, applicability/trigger metadata and active/superseded precedence.
+- Test model-facing retrieval instructions without relying on unavailable Agent Skills.
 
-**Acceptance:** one Basic Memory instruction note links to two datasets and individual records; note renames do not break links when upstream identity is stable.
+**Acceptance:** one Basic Memory instruction note links to two datasets and individual records; note renames do not break links when upstream identity is stable. Chat model can retrieve sheet context via explicit tool calls; no guaranteed automatic ChatGPT activation claim.
 
 ## Phase 3: MCP and ACL hardening
 

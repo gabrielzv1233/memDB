@@ -45,6 +45,10 @@ ChatGPT / Codex / other MCP clients
 
 Basic Memory notes are not copied as canonical memDB records. A local entity reference stores `provider=basic_memory`, `external_id`, title/description/tags snapshot, `last_verified_at` and resolution state. Refresh via supported Basic Memory APIs. If a note is renamed, keep the same external ID; if removed, mark its reference unavailable without deleting historical links. **Confirm Basic Memory's stable identifier guarantees before implementation.**
 
+## Model activation and client boundary
+
+A minimal user-managed native memory note (where supported) describes memDB's purpose and prompts the model to look up detailed context for relevant tasks. The gateway itself cannot observe normal ChatGPT chat or force a tool call; it only responds to explicit MCP tool requests. Client software under our control may implement deterministic prefetch without another LLM. `context_lookup` should return compact metadata and linked entity hints; full technical sheets are fetched separately. See [context discovery](context-discovery.md).
+
 ## Search and context resolution
 
 `discover(query)` returns compact scored **descriptors**, combining memDB metadata search and, if supported, Basic Memory search results; it does not dump entire datasets or complete notes. The client explicitly requests `describe` or `read` and follows links. Distinguish reliable keyword search from optional embedding search; do not claim semantic matching without a configured provider. No additional generative model is required.

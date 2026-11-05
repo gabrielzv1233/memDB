@@ -6,6 +6,9 @@ A self-hosted, agent-accessible **structured dataset engine and MCP gateway**, l
 
 ## Start here
 
+**For model/context behavior:** [Context discovery](planning/context-discovery.md) · [Client instructions](planning/model-instructions.md) · [Memory lifecycle](planning/memory-lifecycle.md) · [Client compatibility](planning/client-compatibility.md)
+
+
 - [Planning index](planning/README.md)
 - [Architecture](planning/architecture.md)
 - [Data model](planning/data-model.md)
@@ -14,6 +17,8 @@ A self-hosted, agent-accessible **structured dataset engine and MCP gateway**, l
 - [Proxmox operations](planning/operations.md)
 - [Roadmap](planning/roadmap.md)
 - [Agent instructions](AGENTS.md)
+- [Detailed handoff for coding agents](planning/agent-handoff.md)
+- [Acceptance scenarios](planning/acceptance-scenarios.md)
 - [Editable diagrams](planning/diagrams/)
 
 ## Separation of concerns
@@ -31,4 +36,4 @@ Basic Memory is **not** included or forked. memDB will link to its separately de
 
 An AI creates logical namespaces and datasets inside one SQLite database, chooses versioned schemas and metadata, stores validated records, and links datasets or records to one or more notes in Basic Memory. Everything has discoverable names, descriptions, tags, relationships and IDs.
 
-The server does not run an LLM; the existing MCP client model decides when to call tools. The gateway enforces authentication, permissions, safe queries and transactional changes.
+The server does not run a second generative LLM; the existing MCP client model decides when to call tools. A short user-controlled ChatGPT memory pointer can remind that richer external knowledge exists, but cannot guarantee tool invocation. The gateway enforces authentication, permissions, safe queries and transactional changes.

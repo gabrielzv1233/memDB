@@ -8,7 +8,7 @@ The following is the **proposed conceptual schema**, not executable DDL. Formal 
 
 | Table | Key fields | Purpose |
 | --- | --- | --- |
-| `entities` | id UUID PK, kind, namespace_id?, title, description, created_at, updated_at, deleted_at | Universal index for namespaces, datasets, records and external notes |
+| `entities` | id UUID PK, kind, namespace_id?, title, description, revision, status, metadata_json, created_at, updated_at, deleted_at | Universal index for namespaces, datasets, records and external notes |
 | `namespaces` | entity_id FK, slug UNIQUE, owner_principal, visibility | Logical grouping |
 | `datasets` | entity_id FK, namespace_id FK, slug UNIQUE per namespace, active_schema_version, options_json | Dataset metadata |
 | `dataset_schemas` | dataset_id FK, version, json_schema, created_at, actor | Immutable schema versions |
@@ -17,7 +17,7 @@ The following is the **proposed conceptual schema**, not executable DDL. Formal 
 | `external_refs` | entity_id FK, provider, external_id, last_verified_at, availability | Basic Memory references |
 | `tags` | id, normalized_slug UNIQUE, display_label | Canonical tags |
 | `entity_tags` | entity_id, tag_id | Many-to-many tagging |
-| `links` | id, source_entity_id, target_entity_id, relation_type, created_at, actor, deleted_at | Typed directional links |
+| `links` | id, source_entity_id, target_entity_id, relation_type, revision, created_at, actor, deleted_at | Typed directional links |
 | `idempotency` | principal_id, key, request_fingerprint, response_ref, expires_at | Deduplicate retries |
 | `audit_events` | id, principal_id, action, entity_id, before_revision, after_revision, occurred_at, request_id, details_redacted | Append-only write trail |
 | `entity_search` | FTS5 virtual index over title, description, tags and optional extracted record text | Local discovery |
@@ -26,7 +26,7 @@ All IDs are stable UUIDs. SQLite foreign keys ON. `UNIQUE(dataset_id, record_id)
 
 ## Metadata model
 
-Every entity can have a human title, description, tags, typed custom metadata, timestamps, owner and links. Dataset descriptions should explain **purpose and expected records**, not merely repeat the name. Per-record tags allowed. Metadata is machine-readable and safely bounded in size.
+Every entity can have a human title, description, tags, typed custom metadata, timestamps, owner and links. Optional `triggers` aid context discovery, `status` and applicability dates distinguish active from superseded knowledge, and external references carry provider freshness. For detailed field semantics see [metadata ontology](metadata-ontology.md). Dataset descriptions should explain **purpose and expected records**, not merely repeat the name. Per-record tags allowed. Metadata is machine-readable and safely bounded in size.
 
 ## Dataset schema example
 

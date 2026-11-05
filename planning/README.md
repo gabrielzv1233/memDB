@@ -4,15 +4,31 @@ This is the **design workspace**, not the app source tree. Start with architectu
 
 | Document | Purpose |
 | --- | --- |
+| [Context discovery](context-discovery.md) | How models are reminded and when/how to retrieve external context |
+| [Model instruction templates](model-instructions.md) | ChatGPT chat mode pointer, tool descriptions and examples |
+| [Memory lifecycle](memory-lifecycle.md) | Capture, dedupe, updates, confidence, conflicts and deletion |
+| [Metadata ontology](metadata-ontology.md) | Tags, descriptions, triggers, identity, status and relationships |
+| [Dataset lifecycle](dataset-lifecycle.md) | Agent-defined datasets, versioned JSON schemas and links |
+| [Basic Memory adapter](adapter-basic-memory.md) | Upstream integration boundary and stability requirements |
+| [Client compatibility](client-compatibility.md) | ChatGPT plan/API limits, compatibility test matrix |
+| [Acceptance tests](acceptance-scenarios.md) | End-to-end behaviors and negative security cases |
+| [Agent handoff](agent-handoff.md) | Suggested implementation order and PR checklist |
+| [Technical sheet template](templates/technical-sheet.md) | Reusable model-readable reference structure |
+| [Draw.io example sheet](examples/technical-sheets/drawio-standards.md) | Draft example of exact reusable user preferences |
 | [Architecture](architecture.md) | Boundaries, components, request flows and Basic Memory adapter |
 | [Data model](data-model.md) | Entity registry, tags, schemas, records, links, revisions, indices |
 | [MCP contract](mcp-contract.md) | Discovery, read/write tools, validation, pagination and errors |
 | [Security and Pocket ID](security-pocketid.md) | OIDC, OAuth for MCP, scopes, authorization and network boundaries |
 | [Operations](operations.md) | Proxmox VM deployment, backup, recovery and observability |
 | [Roadmap](roadmap.md) | Implementation phases and acceptance tests |
-| [Decisions](decisions/0001-core-architecture.md) | Initial architecture decision and alternatives |
+| [Decisions](decisions/0001-core-architecture.md) | ADRs for storage, context activation and relationships |
+| [Research sources](research/sources.md) | Official references and verified/unverified assumptions |
 | [Example: food](examples/nutrition.md) | Memory-to-dataset association example |
 | [Diagrams](diagrams/) | Editable architecture and entity relationship drawings |
+
+## Core principle
+
+The model's compact built-in memory is a **directory to richer context**, not a copy of it. The model searches memDB when the task likely depends on prior information, then loads exact Basic Memory technical sheets or SQLite records. Models do not have to load everything on every turn. This is best-effort in ChatGPT chat and may be deterministic only in client software we control.
 
 ## The product model
 

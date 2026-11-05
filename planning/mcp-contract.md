@@ -6,6 +6,7 @@ The public API is one remotely accessible MCP gateway. The names and payloads be
 
 | Tool | Inputs | Outputs |
 | --- | --- | --- |
+| `context_lookup` | task, kinds?, topic_hints?, max_results?, max_tokens? | Compact relevant descriptors with link/read suggestions, partial failure info |
 | `discover` | query, kinds?, tags?, namespace?, limit? | Descriptors, scores, linked entity counts, cursor |
 | `entity_describe` | entity_id, include_links?, direction? | Metadata, schema summary, selected links, revision |
 | `memory_read` | memory_ref_id, section?, max_chars? | Resolved Basic Memory content, source provenance, freshness |
@@ -17,6 +18,7 @@ The public API is one remotely accessible MCP gateway. The names and payloads be
 
 | Tool | Inputs | Behavior |
 | --- | --- | --- |
+| `dataset_plan` | namespace, slug, title, description, schema, tags? | Dry-run for collisions, validation and grants; no mutation |
 | `namespace_create` | slug, title, description, tags?, idempotency_key | Create a namespace (subject to grants) |
 | `dataset_create` | namespace, slug, title, description, tags?, schema?, idempotency_key | Register dataset and initial schema |
 | `dataset_update` | dataset_id, metadata changes, expected_revision | Modify metadata only |
@@ -29,7 +31,11 @@ The public API is one remotely accessible MCP gateway. The names and payloads be
 | `link_create` | source_id, target_id, relation_type, idempotency_key | Validate IDs/permissions, create typed link |
 | `link_delete` | link_id, expected_revision, idempotency_key | Soft-delete link |
 
-Memory note write/search remains Basic Memory's job; optionally proxy its supported note-writing endpoints later rather than reimplement them. A generic "context" helper may join discovery and one-hop linked metadata, but must respect a token/output budget and permissions.
+Memory note write/search remains Basic Memory's job; optionally expose an authorized `memory_save` write-through tool later, backed by its supported endpoints, rather than reimplementing them. This tool is not assumed to be available in all ChatGPT plans. A generic "context" helper may join discovery and one-hop linked metadata, but must respect a token/output budget and permissions.
+
+## Context lookup semantics
+
+`context_lookup` is an optional convenience orchestration tool: it combines exact/metadata/Basic Memory note discovery (as supported), filters inaccessible results, returns concise descriptors and at most one-hop relation **hints**, and recommends `memory_read`, `entity_describe` or `dataset_query` as subsequent calls. It never automatically uploads full dataset contents or executes writes. The gateway receives task text **only when explicitly passed by the client**. Default result budget: 8 descriptors / 1,500 tokens, subject to config. Unknown or offline provider yields precise partial-results status.
 
 ## Tool response envelope
 
