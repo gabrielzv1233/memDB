@@ -7,3 +7,5 @@ Open `.drawio` files in diagrams.net or the draw.io editor. XML is native/editab
 
 - [Context retrieval](context-retrieval.drawio): model reminder to metadata discovery, explicit note/data reads, response.
 - [Dataset lifecycle](dataset-lifecycle.drawio): creating and linking an AI-defined dataset to Basic Memory.
+
+- [Autonomy policy](autonomy-policy.drawio): gateway authorization stages, delegated low-risk path, trusted review path and deny states.

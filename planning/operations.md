@@ -36,3 +36,7 @@ If Basic Memory is unavailable: local datasets continue, external reference read
 - [ ] SQLite migration and backup plan tested
 - [ ] ACL/security negative tests pass
 - [ ] Restart/recovery and backup restore drill pass
+
+## Autonomous-management operations
+
+Back up server-owned policy tables, grants, review plans and audit alongside application data; store no approval bearer proofs in external chat or public logs. Review/authorization UI must be independently authenticated and separated from model-callable MCP tools. Restart must preserve grant revocations, approval consumption and per-principal quotas. An offline Basic Memory server never justifies bypassing approvals or losing audit events. Periodic index maintenance is okay; autonomous generative content processing requires separate opt-in and is not part of v1.

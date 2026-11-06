@@ -81,3 +81,7 @@
 7. Demonstrate forbidden read/write and offline Basic Memory degraded behavior.
 
 Mark every scenario `not-run`, `pass`, `fail`, or `blocked` with evidence and version before declaring a feature complete.
+
+## Governance and delegated autonomy
+
+The 40-case [autonomous-management test matrix](autonomy/test-cases.md) is the normative security/behavioral extension to this plan. In particular test delegated R2 dataset creation, no AI self-approval, trusted R3 review, quota/revocation checks, one-time exceptions, cross-scope leakage, stale revision rejection, and keeping source-of-truth technical sheets unchanged without reviewed approval.

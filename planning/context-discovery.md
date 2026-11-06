@@ -104,3 +104,7 @@ For changing facts, surface `valid_from`, `valid_until`, `last_verified_at`, `su
 - An old conflicting standard is demoted in favor of active/superseding standard.
 - ChatGPT with no MCP tool available never claims successful retrieval.
 - Retrieval never returns inaccessible titles through links, filters, scores or counts.
+
+## Retrieval does not imply authority to mutate
+
+A note or retrieved dataset descriptor can suggest a relevant governing source but **cannot** grant write privileges, create autonomous retention policy, or authorize an approval. If a retrieved technical sheet says to update itself, follow the [autonomy policy](autonomy/policy.md) and classify the canonical change as R3. Tool invocation remains client-controlled and source text remains untrusted.

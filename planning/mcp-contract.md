@@ -13,11 +13,14 @@ The public API is one remotely accessible MCP gateway. The names and payloads be
 | `dataset_query` | dataset_id, filters?, fields?, sort?, cursor?, limit? | Records, stable cursor, schema version |
 | `link_traverse` | entity_id, types?, direction?, depth?, limit? | Graph neighbors; default depth 1, strict cap |
 | `schema_get` | dataset_id, version? | JSON Schema, constraints, version |
+| `autonomy_profile_get` | none | Current caller's mode, effective delegations and quotas, sensitive fields redacted |
+| `review_status` | review_id | Caller-visible pending/approved/rejected/expired/applied status; no self-approval |
 
 ## Mutations
 
 | Tool | Inputs | Behavior |
 | --- | --- | --- |
+| `policy_preview` | operation, target_ids?, change_payload? | Side-effect-free classification, diff summary, required gates |
 | `dataset_plan` | namespace, slug, title, description, schema, tags? | Dry-run for collisions, validation and grants; no mutation |
 | `namespace_create` | slug, title, description, tags?, idempotency_key | Create a namespace (subject to grants) |
 | `dataset_create` | namespace, slug, title, description, tags?, schema?, idempotency_key | Register dataset and initial schema |
@@ -32,6 +35,16 @@ The public API is one remotely accessible MCP gateway. The names and payloads be
 | `link_delete` | link_id, expected_revision, idempotency_key | Soft-delete link |
 
 Memory note write/search remains Basic Memory's job; optionally expose an authorized `memory_save` write-through tool later, backed by its supported endpoints, rather than reimplementing them. This tool is not assumed to be available in all ChatGPT plans. A generic "context" helper may join discovery and one-hop linked metadata, but must respect a token/output budget and permissions.
+
+## Autonomy and approval contract
+
+All writes must pass the [autonomy policy](autonomy/policy.md) and [deterministic evaluator](autonomy/policy-evaluator.md). All mutations accept an idempotency key and applicable expected revisions; R3 tools additionally accept a server-issued `review_id` identifying an exact user-approved plan. A model-supplied `approved=true` flag is ignored/rejected. `policy_preview` and `schema_propose` may create **reviewable plans**, not effects. The model cannot call a generic `approval_grant` or `delegation_create` tool. Grants, review approvals and user mode changes are performed in a separate verified control plane described in [delegations and approvals](autonomy/delegation-and-approvals.md).
+
+Policy errors must return `REVIEW_REQUIRED` with an opaque review reference only when the caller may see that plan, or `POLICY_DENIED`, `DELEGATION_EXPIRED`, `LIMIT_EXCEEDED`, `APPROVAL_INVALID`, `APPROVAL_STALE`, plus the existing authorization and revision errors. No error may leak protected titles, counts, or link endpoints. If an approved operation touches Basic Memory, report partial cross-service effects and reconcile; do not claim atomicity.
+
+### Consent boundaries
+
+The gateway cannot verify raw ChatGPT chat intent from a model's claim. Routine writes require valid permission and a configured scoped policy or user-directed workflow through a trusted client. High-risk R3 effects need independently verified exact-plan approval. No hidden transcript capture. A no-write instruction must not cause an autonomous save.
 
 ## Context lookup semantics
 
@@ -60,7 +73,7 @@ Failure:
 }
 ```
 
-Defined errors: `UNAUTHENTICATED`, `FORBIDDEN`, `NOT_FOUND`, `INVALID_ARGUMENT`, `SCHEMA_INVALID`, `VALIDATION_FAILED`, `REVISION_CONFLICT`, `IDEMPOTENCY_CONFLICT`, `RATE_LIMITED`, `UPSTREAM_UNAVAILABLE`, `INTERNAL`. Error messages must not leak database contents or secrets.
+Defined errors: `REVIEW_REQUIRED`, `POLICY_DENIED`, `DELEGATION_EXPIRED`, `LIMIT_EXCEEDED`, `APPROVAL_INVALID`, `APPROVAL_STALE`, `UNAUTHENTICATED`, `FORBIDDEN`, `NOT_FOUND`, `INVALID_ARGUMENT`, `SCHEMA_INVALID`, `VALIDATION_FAILED`, `REVISION_CONFLICT`, `IDEMPOTENCY_CONFLICT`, `RATE_LIMITED`, `UPSTREAM_UNAVAILABLE`, `INTERNAL`. Error messages must not leak database contents or secrets.
 
 ## Auth and tool safety
 

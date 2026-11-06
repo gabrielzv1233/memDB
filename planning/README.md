@@ -4,6 +4,7 @@ This is the **design workspace**, not the app source tree. Start with architectu
 
 | Document | Purpose |
 | --- | --- |
+| [Autonomous management](autonomy/README.md) | **Normative v1 risk levels, delegated permissions, exact-plan approval, reconciliation, dataset organization and tests** |
 | [Context discovery](context-discovery.md) | How models are reminded and when/how to retrieve external context |
 | [Model instruction templates](model-instructions.md) | ChatGPT chat mode pointer, tool descriptions and examples |
 | [Memory lifecycle](memory-lifecycle.md) | Capture, dedupe, updates, confidence, conflicts and deletion |
@@ -28,7 +29,7 @@ This is the **design workspace**, not the app source tree. Start with architectu
 
 ## Core principle
 
-The model's compact built-in memory is a **directory to richer context**, not a copy of it. The model searches memDB when the task likely depends on prior information, then loads exact Basic Memory technical sheets or SQLite records. Models do not have to load everything on every turn. This is best-effort in ChatGPT chat and may be deterministic only in client software we control.
+The **server-enforced autonomy policy** governs all mutations (see [autonomy suite](autonomy/README.md)). The model's compact built-in memory is a **directory to richer context**, not a copy of it. The model searches memDB when the task likely depends on prior information, then loads exact Basic Memory technical sheets or SQLite records. Models do not have to load everything on every turn. This is best-effort in ChatGPT chat and may be deterministic only in client software we control.
 
 ## The product model
 

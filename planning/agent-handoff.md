@@ -13,8 +13,9 @@ Implement the memDB **SQLite dataset engine and unified MCP gateway**, without f
 5. `metadata-ontology.md` and `data-model.md`
 6. `dataset-lifecycle.md` and `mcp-contract.md`
 7. `adapter-basic-memory.md`
-8. `security-pocketid.md` and `client-compatibility.md`
-9. `acceptance-scenarios.md` and `roadmap.md`
+8. `autonomy/README.md`, `autonomy/policy.md`, `autonomy/delegation-and-approvals.md`, `autonomy/policy-evaluator.md`, `autonomy/reconciliation.md`, `autonomy/dataset-organization.md` and `autonomy/test-cases.md`
+9. `security-pocketid.md` and `client-compatibility.md`
+10. `acceptance-scenarios.md` and `roadmap.md`
 
 ## Work packages
 
@@ -24,7 +25,7 @@ Prove remote authenticated MCP read access from an actual intended client, docum
 
 ### 1. Storage skeleton
 
-Choose migration tool and Python packaging, implement one SQLite file, schema, FTS and transaction boundaries. Unit-test entity IDs, namespaces, metadata, ACL and audit.
+Choose migration tool and Python packaging, implement one SQLite file, schema, FTS and transaction boundaries. Unit-test entity IDs, namespaces, metadata, ACL and audit. Implement internal delegation/review tables and evaluator without exposing them as generic datasets.
 
 ### 2. Dynamic datasets
 
@@ -34,9 +35,9 @@ Implement schema registry, JSON Schema validation, generic record operations, re
 
 Adapter to separate Basic Memory, external reference reconciliation, links in both directions and ACL-filtered discovery. Avoid copying whole notes into local DB. Implement `context_lookup` returning small descriptors and explicit next reads.
 
-### 4. Security and operations
+### 4. Security, autonomous approvals and operations
 
-Pocket ID-compatible OAuth, token verification, per-namespace grants, rate limiting, Proxmox deployment, backup/restore, health checks and threat tests.
+Pocket ID-compatible OAuth, token verification, per-namespace grants, R0-R4 classification, delegation revocation, trusted exact-plan review, rate limiting, Proxmox deployment, backup/restore, health checks and threat tests.
 
 ### 5. Client instructions and real demos
 
@@ -53,6 +54,8 @@ Suggested labels: `phase:0` through `phase:4`, `component:gateway`, `component:s
 - [ ] Schema changes and migration/rollback documented.
 - [ ] No raw SQL, secrets, production data or private vault in Git.
 - [ ] Permissions apply to search, traversal, read and write.
+- [ ] Mutations pass R0-R4 policy gates, with independent trusted approval for R3 and no model-minted grants.
+- [ ] All relevant `AUT-*` cases from the autonomy matrix are tested or explicitly blocked.
 - [ ] Tool outputs include provenance and precise error status.
 - [ ] Any changed product design has a decision document.
 - [ ] No claim that docs represent implemented features.

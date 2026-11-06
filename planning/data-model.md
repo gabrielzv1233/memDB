@@ -21,8 +21,15 @@ The following is the **proposed conceptual schema**, not executable DDL. Formal 
 | `idempotency` | principal_id, key, request_fingerprint, response_ref, expires_at | Deduplicate retries |
 | `audit_events` | id, principal_id, action, entity_id, before_revision, after_revision, occurred_at, request_id, details_redacted | Append-only write trail |
 | `entity_search` | FTS5 virtual index over title, description, tags and optional extracted record text | Local discovery |
+| `autonomy_profiles` | principal_id, mode, policy_version, updated_at | User-controlled autonomy mode |
+| `delegations` | id, principal_id, client_id?, namespace_id, ops_json, limits_json, expiry, revoked_at, revision | Bounded revocable grants |
+| `review_plans` | id, principal_id, operation_json, exact_digest, target_revisions_json, status, expiry | Server-computed reviewable diff |
+| `review_decisions` | review_id, verified_reviewer_id, decision, decided_at, exact_digest | Trusted approval/rejection |
+| `policy_events` | id, actor, client, risk, operation, decision, reason, redacted_context | Audit of permission decisions |
 
 All IDs are stable UUIDs. SQLite foreign keys ON. `UNIQUE(dataset_id, record_id)`-style membership is validated when creating links. Active dataset slugs cannot collide within a namespace. Normalize tags and slugs (lowercase ASCII slug; preserve human display name). Timestamps UTC RFC 3339. Private storage must be encrypted at the VM/volume layer if at-rest encryption is required.
+
+All **policy tables** are internal-only and not discoverable as normal agent-defined datasets. They require trusted administrative APIs and are inaccessible through generic JSON record tools. Approval consumption and local writes must be transactionally coordinated; see [autonomy evaluator](autonomy/policy-evaluator.md).
 
 ## Metadata model
 

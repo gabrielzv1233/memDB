@@ -76,3 +76,7 @@ Support listing, reading, editing, exporting and deletion requests through autho
 - Repeated save after transport retry creates no duplicate.
 - An unavailable Basic Memory note produces a truthful partial result.
 - Deletion cannot leave a searchable full-text cache of removed private content.
+
+## Autonomous memory editing controls
+
+The [autonomy policy](autonomy/policy.md) governs actual persistence. Mere user discussion or model inference does not enable auto-capture. Scoped routine non-authoritative metadata edits may be R1; drafts and new note creation are R2 when upstream supported; canonical technical-sheet revisions, merges, supersession and deletion are R3 with an independently reviewed exact diff. A task-level temporary preference is not a global source-of-truth update. See [reconciliation](autonomy/reconciliation.md) and [delegation protocol](autonomy/delegation-and-approvals.md).

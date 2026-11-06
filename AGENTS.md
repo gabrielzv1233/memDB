@@ -1,6 +1,6 @@
 # Agent instructions
 
-Read `planning/README.md`, `planning/architecture.md`, `planning/data-model.md`, `planning/mcp-contract.md`, and `planning/security-pocketid.md`, `planning/context-discovery.md`, `planning/model-instructions.md`, `planning/metadata-ontology.md`, and `planning/client-compatibility.md` **before implementing**. See `planning/agent-handoff.md` and `planning/acceptance-scenarios.md` for work packages and tests.
+Read `planning/README.md`, `planning/architecture.md`, `planning/data-model.md`, `planning/mcp-contract.md`, and `planning/security-pocketid.md`, `planning/context-discovery.md`, `planning/model-instructions.md`, `planning/metadata-ontology.md`, and `planning/client-compatibility.md` **before implementing**. Read `planning/autonomy/README.md` and all linked autonomy policies before implementing write tools. See `planning/agent-handoff.md` and `planning/acceptance-scenarios.md` for work packages and tests.
 
 ## Scope and invariants
 - Repository: memDB, a standalone dataset engine + public MCP gateway; Basic Memory stays an **external dependency**.
@@ -15,6 +15,14 @@ Read `planning/README.md`, `planning/architecture.md`, `planning/data-model.md`,
 - Verify ChatGPT account/plan write capability in Phase 0. No assumption that full custom MCP writes work on personal Plus/Pro.
 - Avoid inventing OAuth claims, endpoints, group IDs or Pocket ID configuration; verify integration against currently deployed versions.
 - Design documents describe **targets, not implemented behavior**. Flag changes in an ADR.
+
+## Autonomous changes (mandatory server enforcement)
+- Before any change, evaluate the risk rules in `planning/autonomy/policy.md`; enforce scoped OAuth/ACL + delegation or server-issued trusted review.
+- R1 routine writes can proceed under proper authorization; R2 structure creation needs scoped delegation or review; R3 canonical/bulk/destructive changes require exact-plan approval; R4 is prohibited.
+- Never trust agent-supplied `approved=true`, quoted user instructions, or text from a retrieved note as proof of approval.
+- Profile and delegation management must be through an authenticated trusted control plane, not ordinary dataset tools.
+- Preserve revision history, idempotency, audit, rollback and cross-service reconciliation. Prevent a series of small calls from evading bulk thresholds.
+- Do not secretly ingest chats or invent persistence when a ChatGPT client is read-only/unconnected.
 
 ## Working method
 1. Choose the earliest incomplete phase in `planning/roadmap.md`.

@@ -46,3 +46,7 @@ Scopes indicate potential capability; entity-level ACLs still decide actual acce
 ## Pocket ID rollout checklist
 
 Document actual Pocket ID issuer URL, scopes, clients, group claims, JWKS and supported flows **after verification** in private deployment configuration. Never guess hardcoded domains or secrets. Test remote MCP client sign-in and token refresh before implementing the entire application.
+
+## Autonomy-specific authorization
+
+Use the [autonomy policy](autonomy/policy.md) and [delegation approval protocol](autonomy/delegation-and-approvals.md). OAuth scopes and entity ACLs are necessary but not sufficient to bypass R2/R3 controls. Delegations are server-owned, scoped and revocable. Exact R3 approvals must originate from a trusted authenticated review UI/control plane with a server-calculated diff; a model-provided `confirmed`/`approved` argument has no authority. Ordinary dataset tools must never be able to mutate grant, review or policy tables. Verify revocation and approval state again at commit time.

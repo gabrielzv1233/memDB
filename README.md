@@ -6,6 +6,8 @@ A self-hosted, agent-accessible **structured dataset engine and MCP gateway**, l
 
 ## Start here
 
+**For autonomous operations:** [Autonomy policy suite](planning/autonomy/README.md) · [Risk matrix](planning/autonomy/policy.md) · [Trusted approvals](planning/autonomy/delegation-and-approvals.md)
+
 **For model/context behavior:** [Context discovery](planning/context-discovery.md) · [Client instructions](planning/model-instructions.md) · [Memory lifecycle](planning/memory-lifecycle.md) · [Client compatibility](planning/client-compatibility.md)
 
 

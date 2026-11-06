@@ -64,3 +64,7 @@ If schema apply fails halfway, roll back the SQLite transaction. If dataset crea
 - Reject cross-namespace forbidden links.
 - Update schema while preserving historical records and a rollback path.
 - Ensure records remain discoverable after service restart.
+
+## Autonomous organization policy
+
+The agent should *reuse before creating*. Creating a new logical dataset is R2 and may execute without repeated prompts **only** when covered by a user-configured scoped delegation or trusted review; schema application, mass rewrites and privileged governing links are R3. Dataset creation and link operations are evaluated server-side, not by trusting a model-supplied user confirmation. See [organization workflow](autonomy/dataset-organization.md), [risk matrix](autonomy/policy.md) and [approval process](autonomy/delegation-and-approvals.md).

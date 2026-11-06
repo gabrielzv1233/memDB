@@ -9,6 +9,7 @@ Each phase requires docs, automated tests and a runnable acceptance demonstratio
 - Verify actual ChatGPT account plan's access to custom MCP **read and write** tools; do not promise full writes on personal Plus/Pro.
 - Validate Basic Memory stable IDs, rename behavior, note metadata, search and read/write capabilities against deployed version.
 - Choose Python version, FastMCP/SDK version, migration mechanism and packaging.
+- Confirm trusted approval/control-plane integration can authenticate independently of model arguments; validate whether intended client supports write operations.
 - Record observed endpoints/versions in an ADR. **No unsupported assumption is a valid contract.**
 
 **Acceptance:** authenticated client calls a protected hello/read-only discovery endpoint; Basic Memory reference resolves by supported interface, with errors handled.
@@ -18,6 +19,7 @@ Each phase requires docs, automated tests and a runnable acceptance demonstratio
 - Implement migrations for entities, namespaces, datasets, schemas, records, tags, links, revisions, idempotency, audit.
 - Enforce JSON Schema validation and schema version policy.
 - Implement optimistic revisions, soft delete, duplicate retry protection.
+- Add internal autonomy profiles, delegation grants, review plans/decisions, policy events and R0-R4 evaluation with server-owned auth context.
 - Test restart persistence, concurrent writers, rollback and invalid migrations.
 
 **Acceptance:** an agent creates a new namespace/dataset and stores/queries/tagged records without writing SQL or server code.
@@ -35,9 +37,11 @@ Each phase requires docs, automated tests and a runnable acceptance demonstratio
 
 - Publish final tools with typed schemas, pagination, scopes, ACL and structured errors.
 - Rate limits, quotas, audit redaction, prompt-injection boundaries, schema change gates.
+- Build trusted exact-diff review/approval control plane (not model-callable), revocation, and single-use approval checks.
+- Run all cases in `planning/autonomy/test-cases.md` including anti-replay, escalation, partial failure and conflict handling.
 - Verify negative tests and real remote MCP client.
 
-**Acceptance:** unauthorized search/link/mutation requests cannot reveal or change data.
+**Acceptance:** unauthorized search/link/mutation requests cannot reveal or change data. Scoped R1/R2 work without repeated confirmation as permitted; R3 needs exact verified review; R4 always denied.
 
 ## Phase 4: Proxmox release
 
